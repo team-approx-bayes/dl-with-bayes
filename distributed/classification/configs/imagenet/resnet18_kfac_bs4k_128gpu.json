@@ -1,0 +1,53 @@
+{
+  "dataset": "ImageNet",
+  "epochs": 61,
+  "batch_size": 32,
+  "val_batch_size": 32,
+  "random_resized_crop": false,
+  "random_crop": true,
+  "random_horizontal_flip": true,
+  "normalizing_data": true,
+  "arch_file": "models/resnet_b.py",
+  "arch_name": "resnet18",
+  "arch_args": {
+    "zero_init_residual": false,
+    "norm_stat_momentum": 0.1
+  },
+  "optim_name": "DistributedSecondOrderOptimizer",
+  "optim_args": {
+    "curv_type": "Fisher",
+    "curv_shapes": {
+      "Conv2d": "Kron",
+      "Linear": "Kron",
+      "BatchNorm1d": "Diag",
+      "BatchNorm2d": "Diag"
+    },
+    "lr": 1.6e-3,
+    "l2_reg": 1e-4,
+    "momentum": 0.9,
+    "momentum_type": "raw",
+    "non_reg_for_bn": true,
+    "acc_steps": 1
+  },
+  "curv_args": {
+    "damping": 1e-4,
+    "ema_decay": 1,
+    "pi_type": "tracenorm"
+  },
+  "fisher_args": {
+    "approx_type": "mc",
+    "num_mc": 1
+  },
+  "momentum_correction": true,
+  "scheduler_name": "MultiStepLR",
+  "scheduler_args": {
+    "milestones": [15, 30, 45],
+    "gamma": 0.1
+  },
+  "warmup_epochs": 5,
+  "warmup_scheduler_name": "GradualWarmupIterLR",
+  "warmup_scheduler_args": {
+    "initial_lr": 1.25e-5,
+    "max_count": 1565
+  }
+}

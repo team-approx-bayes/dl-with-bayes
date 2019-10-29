@@ -1,0 +1,17 @@
+{
+    "dataset": "CIFAR-10",
+    "epochs": 150,
+    "batch_size": 32,
+    "val_batch_size": 1250,
+    "random_crop": true,
+    "random_horizontal_flip": true,
+    "normalizing_data": true,
+    "arch_file": "models/lenet.py",
+    "arch_name": "LeNet5",
+    "optim_name": "SGD",
+    "optim_args": {
+        "lr": 1e-3,
+        "momentum": 0.9,
+        "weight_decay": 1e-2
+    }
+}

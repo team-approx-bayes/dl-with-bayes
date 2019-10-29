@@ -1,0 +1,36 @@
+{
+  "dataset": "CIFAR-10",
+  "epochs": 211,
+  "batch_size": 32,
+  "val_batch_size": 128,
+  "random_crop": false,
+  "random_horizontal_flip": false,
+  "normalizing_data": true,
+  "dataset_size_scale": 1,
+  "arch_file": "models/lenet.py",
+  "arch_name": "LeNet5",
+  "optim_name": "DistributedVIOptimizer",
+  "optim_args": {
+    "curv_type": "Cov",
+    "curv_shapes": {
+      "Conv2d": "Diag",
+      "Linear": "Diag",
+      "BatchNorm1d": "Diag",
+      "BatchNorm2d": "Diag"
+    },
+    "lr": 1e-4,
+    "momentum": 0.9,
+    "momentum_type": "raw",
+    "num_mc_samples": 6,
+    "val_num_mc_samples": 10,
+    "kl_weighting": 1,
+    "warmup_kl_weighting_init": 0.1,
+    "warmup_kl_weighting_steps": 11719,
+    "prior_variance": 1e-2
+  },
+  "curv_args": {
+    "damping": 1e-3,
+    "ema_decay": 0.999
+  },
+  "num_mc_groups": 4
+}

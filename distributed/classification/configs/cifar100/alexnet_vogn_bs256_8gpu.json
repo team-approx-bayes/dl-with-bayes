@@ -1,0 +1,41 @@
+{
+    "dataset": "CIFAR-100",
+    "epochs": 161,
+    "batch_size": 32,
+    "val_batch_size": 128,
+    "random_crop": true,
+    "random_horizontal_flip": true,
+    "normalizing_data": true,
+    "dataset_size_scale": 10,
+    "arch_file": "models/alexnet.py",
+    "arch_name": "AlexNet",
+    "optim_name": "DistributedVIOptimizer",
+    "optim_args": {
+        "curv_type": "Cov",
+        "curv_shapes": {
+            "Conv2d": "Diag",
+            "Linear": "Diag",
+            "BatchNorm1d": "Diag",
+            "BatchNorm2d": "Diag"
+        },
+        "lr": 1e-4,
+        "momentum": 0.9,
+        "momentum_type": "raw",
+        "num_mc_samples": 10,
+        "val_num_mc_samples": 100,
+        "kl_weighting": 1,
+        "warmup_kl_weighting_init": 0.5,
+        "warmup_kl_weighting_steps": 1954,
+        "prior_variance": 0.02
+    },
+    "curv_args": {
+        "damping": 1e-3,
+        "ema_decay": 0.999
+    },
+    "scheduler_name": "MultiStepLR",
+    "scheduler_args": {
+        "milestones": [80, 120],
+        "gamma": 0.1
+    },
+    "num_mc_groups": 8
+}

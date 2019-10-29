@@ -1,0 +1,34 @@
+{
+  "dataset": "ImageNet",
+  "epochs": 91,
+  "batch_size": 32,
+  "val_batch_size": 391,
+  "random_resized_crop": false,
+  "random_crop": true,
+  "random_horizontal_flip": true,
+  "normalizing_data": true,
+  "arch_file": "models/resnet_b.py",
+  "arch_name": "resnet18",
+  "arch_args": {
+    "zero_init_residual": true,
+    "norm_stat_momentum": 0.1
+  },
+  "optim_name": "Adam",
+  "optim_args": {
+    "lr": 1.6e-3,
+    "weight_decay": 1e-4,
+    "betas": [0.9, 0.999]
+  },
+  "non_wd_for_bn": true,
+  "scheduler_name": "MultiStepLR",
+  "scheduler_args": {
+    "milestones": [30, 60, 80],
+    "gamma": 0.1
+  },
+  "warmup_epochs": 5,
+  "warmup_scheduler_name": "GradualWarmupIterLR",
+  "warmup_scheduler_args": {
+    "initial_lr": 1.25e-5,
+    "max_count": 1565
+  }
+}
