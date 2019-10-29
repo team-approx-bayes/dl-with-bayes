@@ -21,7 +21,7 @@ For `init_method`, refer the [PyTorch tutorial for distirubted applications](htt
 | optimizer | dataset | architecture | GPUs | config file path |
 | --- | --- | --- | --- | --- |
 | [Adam](https://arxiv.org/abs/1412.6980) | ImageNet | ResNet-18 | 128 | [configs/imagenet/resnet18_adam_bs4k_128gpu.json](./configs/imagenet/resnet18_adam_bs4k_128gpu.json) |
-| [K-FAC](https://arxiv.org/abs/1503.05671) | ImageNet | ResNet-18 | 4 | [configs/imagenet/resnet18_kfac_bs4k_4gpu.json](./classification/configs/imagenet/resnet18_kfac_bs4k_4gpu.json) |
+| [K-FAC](https://arxiv.org/abs/1503.05671) | ImageNet | ResNet-18 | 4 | [configs/imagenet/resnet18_kfac_bs4k_4gpu.json](./configs/imagenet/resnet18_kfac_bs4k_4gpu.json) |
 | [K-FAC](https://arxiv.org/abs/1503.05671)| ImageNet | ResNet-18 | 128 | [configs/imagenet/resnet18_kfac_bs4k_128gpu.json](./configs/imagenet/resnet18_kfac_bs4k_128gpu.json) |
 | [Noisy K-FAC](https://arxiv.org/abs/1712.02390)| ImageNet | ResNet-18 | 128 | [configs/imagenet/resnet18_noisykfac_bs4k_128gpu.json](./configs/imagenet/resnet18_noisykfac_bs4k_128gpu.json) |
 | [VOGN](https://arxiv.org/abs/1806.04854)| ImageNet | ResNet-18 | 128 | [configs/imagenet/resnet18_vogn_bs4k_128gpu.json](./configs/imagenet/resnet18_vogn_bs4k_128gpu.json) |
