@@ -6,7 +6,7 @@ especially the [Natural Gradient for Variational Inference (NGVI)](http://procee
 This repository contains code for the NeurIPS 2019 paper "[Practical Deep Learning with Bayesian Principles](https://arxiv.org/abs/1906.02506),"
 which includes large-scale results of **VI (VOGN) on ImageNet classification**.
 
-![](./docs/curves.png)
+![](./docs/curves.png "ResNet-18 on ImageNet classification.")
 
 
 ## Setup
@@ -22,8 +22,7 @@ Please follow the
 of PyTorch-SSO for CUDA/MPI support.
 
 ## Applications
-- Image classification (
-[MNIST](./classification),
+- Image classification ([MNIST](./classification),
  [CIFAR-10/100](./classification), 
  and [ImageNet](./distributed/classification))
 - [WIP] Continual learning for image classification (permuted MNIST)
