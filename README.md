@@ -21,9 +21,9 @@ of PyTorch-SSO for CUDA/MPI support.
 
 ## Applications
 - Image classification (
-[MNIST](https://github.com/team-abi/dl-with-bayes/blob/master/classification),
- [CIFAR-10/100](https://github.com/team-abi/dl-with-bayes/blob/master/classification), 
- and [ImageNet](https://github.com/team-abi/dl-with-bayes/blob/master/distributed/classification))
+[MNIST](./classification),
+ [CIFAR-10/100](./classification), 
+ and [ImageNet](./distributed/classification))
 - [WIP] Continual learning for image classification (permuted MNIST)
 - [WIP] Per-pixel semantic labeling & segmentation (Cityscapes) 
 
