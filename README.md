@@ -4,7 +4,9 @@ a collection of applications of Bayesian Deep Learning,
 especially the [Natural Gradient for Variational Inference (NGVI)](http://proceedings.mlr.press/v80/khan18a.html).
 
 This repository contains code for the NeurIPS 2019 paper "[Practical Deep Learning with Bayesian Principles](https://arxiv.org/abs/1906.02506),"
-which includes large-scale results of **VI on ImageNet classification**.
+which includes large-scale results of **VI (VOGN) on ImageNet classification**.
+
+![](./docs/curves.png)
 
 
 ## Setup
