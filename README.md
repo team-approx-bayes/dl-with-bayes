@@ -30,7 +30,7 @@ of PyTorch-SSO for CUDA/MPI support.
 
 
 ## Citation
-NeurIPS 2019 paper (preprint)
+NeurIPS 2019 paper
 ```
 @article{osawa2019practical,
   title = {Practical Deep Learning with Bayesian Principles},
