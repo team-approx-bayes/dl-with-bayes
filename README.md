@@ -21,7 +21,7 @@ Please follow the
 of PyTorch-SSO for CUDA/MPI support.
 
 ## Quick Start
-To get familiar with the benefits of VOGN and PyTorch-SSO, you can start with the [toy example](./toy_example).
+To get familiar with the benefits of VOGN and the usage of PyTorch-SSO, you can start with the [toy example](./toy_example).
 
 ## Applications
 - Image classification ([MNIST](./classification),
