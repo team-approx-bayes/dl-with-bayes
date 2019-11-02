@@ -6,8 +6,7 @@ especially the [Natural Gradient for Variational Inference (NGVI)](http://procee
 This repository contains code for the NeurIPS 2019 paper "[Practical Deep Learning with Bayesian Principles](https://arxiv.org/abs/1906.02506),"
 which includes large-scale results of **VI (VOGN) on ImageNet classification**.
 
-![](./docs/curves.png "ResNet-18 on ImageNet classification.")
-
+![](./docs/curves.png)
 
 ## Setup
 This repository uses [PyTorch-SSO](https://github.com/cybertronai/pytorch-sso), a PyTorch extension for second-order optimization, variational inference, and distributed training.
@@ -20,6 +19,9 @@ $ python setup.py install
 Please follow the 
 [Installation](https://github.com/cybertronai/pytorch-sso#installation) 
 of PyTorch-SSO for CUDA/MPI support.
+
+## Quick Start
+To get familiar with the benefits of VOGN and PyTorch-SSO, you can start with the [toy example](./toy_example).
 
 ## Applications
 - Image classification ([MNIST](./classification),
