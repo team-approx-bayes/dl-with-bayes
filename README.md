@@ -32,7 +32,7 @@ To get familiar with the benefits of VOGN and PyTorch-SSO, you can start with th
 
 
 ## Citation
-NeurIPS 2019 paper (preprint)
+NeurIPS 2019 paper
 ```
 @article{osawa2019practical,
   title = {Practical Deep Learning with Bayesian Principles},
