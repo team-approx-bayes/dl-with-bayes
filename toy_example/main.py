@@ -34,6 +34,8 @@ def main():
     parser.add_argument('--plot_interval', type=int, default=20,
                         help='interval iterations to plot decision boundary')
     # Options
+    parser.add_argument('--n_samples_for_mcplot', type=int, default=20,
+                        help='number of MC samples for plotting boundaries by VOGN')
     parser.add_argument('--no_cuda', action='store_true', default=False,
                         help='disables CUDA training')
     parser.add_argument('--log_file_name', type=str, default='log',
@@ -77,16 +79,17 @@ def main():
 
     model1 = MLP(**model_kwargs)
     model1 = model1.to(device)
-    optimizer1 = torch.optim.Adam(model1.parameters())
+    optim1_kwargs = dict(lr=1e-2)
+    optimizer1 = torch.optim.Adam(model1.parameters(), **optim1_kwargs)
 
     model2 = pickle.loads(pickle.dumps(model1))  # create a clone
     model2 = model2.to(device)
     curv_kwargs = dict(ema_decay=0.01, damping=1e-7)
-    optim_kwargs = dict(dataset_size=len(train_loader.dataset),
-                        curv_type='Cov', curv_shapes={'Linear': 'Diag'}, curv_kwargs=curv_kwargs,
-                        kl_weighting=1, warmup_kl_weighting_init=0.01, warmup_kl_weighting_steps=1000,
-                        grad_ema_decay=0.1, num_mc_samples=50, val_num_mc_samples=20)
-    optimizer2 = torchsso.optim.VIOptimizer(model2, **optim_kwargs)
+    optim2_kwargs = dict(dataset_size=len(train_loader.dataset),
+                         curv_type='Cov', curv_shapes={'Linear': 'Diag'}, curv_kwargs=curv_kwargs,
+                         kl_weighting=1, warmup_kl_weighting_init=0.01, warmup_kl_weighting_steps=1000,
+                         grad_ema_decay=0.1, num_mc_samples=50, val_num_mc_samples=100)
+    optimizer2 = torchsso.optim.VIOptimizer(model2, **optim2_kwargs)
 
     def get_default_args(func):
         signature = inspect.signature(func)
@@ -104,11 +107,13 @@ def main():
         print(f'{key}: {val}')
     print('---------------------------')
     print(f'optim1 class: {optimizer1.__class__}')
-    print(f'optim1 args: {get_default_args(optimizer1.__init__)}')
+    kwargs = get_default_args(optimizer1.__init__)
+    kwargs.update(optim1_kwargs)
+    print(f'optim1 args: {kwargs}')
     print('---------------------------')
     print(f'optim2 class: {optimizer2.__class__}')
     kwargs = get_default_args(optimizer2.__init__)
-    kwargs.update(optim_kwargs)
+    kwargs.update(optim2_kwargs)
     print(f'optim2 args: {kwargs}')
     print('===========================')
 
@@ -143,41 +148,73 @@ def main():
             loss2, _ = optimizer2.step(closure2)
 
             if (i + 1) % args.plot_interval == 0:
-                # Setup figure
-                fig = plt.figure()
-                plt.xlabel('Input 1')
-                plt.ylabel('Input 2')
-                plt.title(f'Iteration {i+1}')
+                # Setup figures
+                fig = plt.figure(figsize=(21, 6))
+                gs = fig.add_gridspec(1, 3)
+
+                # Decision boundary
+                ax1 = fig.add_subplot(gs[0, 0])
+                ax1.set_xlabel('Input 1')
+                ax1.set_ylabel('Input 2')
+                ax1.set_title(f'Iteration {i+1}')
+
+                # Entropy (Adam)
+                ax2 = fig.add_subplot(gs[0, 1])
+                ax2.set_xlabel('Input 1')
+                ax2.set_ylabel('Input 2')
+                ax2.set_title(f'Entropy (Adam)')
+
+                # Entropy (VOGN)
+                ax3 = fig.add_subplot(gs[0, 2])
+                ax3.set_xlabel('Input 1')
+                ax3.set_ylabel('Input 2')
+                ax3.set_title(f'Entropy (VOGN)')
 
                 model1.eval()
                 model2.eval()
 
                 # (Adam)
-                pred = torch.round(torch.sigmoid(model1(data_meshgrid)))
-                pred = pred.detach().cpu().numpy().reshape(xx.shape)
-                plot = plt.contour(xx, yy, pred, colors=['blue'], linewidths=[2])
+                prob = torch.sigmoid(model1(data_meshgrid)).view(xx.shape)
+                entropy = get_entropy(prob)
+                pred = torch.round(prob).detach().cpu().numpy()
+
+                plot = ax1.contour(xx, yy, pred, colors=['blue'], linewidths=[2])
                 plot.collections[len(plot.collections)//2].set_label('Adam')
+                im = ax2.pcolormesh(xx, yy, entropy)
+                fig.colorbar(im, ax=ax2)
 
                 # (VOGN) get MC samples
-                _, probs = optimizer2.prediction(data_meshgrid, keep_probs=True)
+                prob, probs = optimizer2.prediction(data_meshgrid, keep_probs=True)
+                prob = prob.view(xx.shape)
+                entropy = get_entropy(prob)
+
+                probs = probs[:args.n_samples_for_mcplot]
                 preds = [torch.round(p).detach().cpu().numpy().reshape(xx.shape) for p in probs]
                 for pred in preds:
-                    plt.contour(xx, yy, pred, colors=['red'], alpha=0.01)
+                    ax1.contour(xx, yy, pred, colors=['red'], alpha=0.01)
+                im = ax3.pcolormesh(xx, yy, entropy)
+                fig.colorbar(im, ax=ax3)
 
                 # (VOGN) get mean prediction
-                prob = optimizer2.prediction(data_meshgrid, mc=0)
-                pred = torch.round(prob).detach().cpu().numpy().reshape(xx.shape)
-                plot = plt.contour(xx, yy, pred, colors=['red'], linewidths=[2])
+                prob = optimizer2.prediction(data_meshgrid, mc=0).view(xx.shape)
+                pred = torch.round(prob).detach().cpu().numpy()
+
+                plot = ax1.contour(xx, yy, pred, colors=['red'], linewidths=[2])
                 plot.collections[len(plot.collections)//2].set_label('VOGN')
 
                 # plot samples
                 for label, marker, color in zip([0, 1], ['o', 's'], ['white', 'gray']):
                     _X = X[y == label]
-                    plt.scatter(_X[:, 0], _X[:, 1], s=80, c=color, edgecolors='black', marker=marker)
+                    ax1.scatter(_X[:, 0], _X[:, 1], s=80, c=color, edgecolors='black', marker=marker)
+                    ax2.scatter(_X[:, 0], _X[:, 1], s=80, c=color, edgecolors='black', marker=marker)
+                    ax3.scatter(_X[:, 0], _X[:, 1], s=80, c=color, edgecolors='black', marker=marker)
 
                 # save tmp figure
-                plt.grid(linestyle='--')
-                plt.legend(loc='lower right')
+                ax1.grid(linestyle='--')
+                ax2.grid(linestyle='--')
+                ax3.grid(linestyle='--')
+                ax1.legend(loc='lower right')
+                ax1.set_aspect(0.8)
                 plt.tight_layout()
                 figname = f'iteration{i+1}.png'
                 figpath = os.path.join(args.fig_dir, figname)
@@ -198,6 +235,14 @@ def main():
         if not args.keep_figures:
             os.remove(figpath)
     imageio.mimsave(args.out, images, fps=1)
+
+
+def get_entropy(prob: torch.Tensor):
+    entropy = - prob * torch.log(prob) - (1 - prob) * torch.log(1 - prob)
+    entropy[entropy != entropy] = 0  # nan to zero
+    entropy = entropy.detach().cpu().numpy()
+
+    return entropy
 
 
 class MLP(nn.Module):
