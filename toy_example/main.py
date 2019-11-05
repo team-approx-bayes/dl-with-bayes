@@ -27,11 +27,11 @@ def main():
     parser.add_argument('--random_state', type=int, default=5,
                         help='random seed for data creation')
     # Training
-    parser.add_argument('--epochs', type=int, default=20,
+    parser.add_argument('--epochs', type=int, default=30,
                         help='number of epochs to train')
     parser.add_argument('--batch_size', type=int, default=10,
                         help='input batch size for training')
-    parser.add_argument('--plot_interval', type=int, default=20,
+    parser.add_argument('--plot_interval', type=int, default=30,
                         help='interval iterations to plot decision boundary')
     # Options
     parser.add_argument('--n_samples_for_mcplot', type=int, default=20,
@@ -79,14 +79,14 @@ def main():
 
     model1 = MLP(**model_kwargs)
     model1 = model1.to(device)
-    optim1_kwargs = dict(lr=1e-2)
+    optim1_kwargs = dict(lr=1e-3)
     optimizer1 = torch.optim.Adam(model1.parameters(), **optim1_kwargs)
 
     model2 = pickle.loads(pickle.dumps(model1))  # create a clone
     model2 = model2.to(device)
     curv_kwargs = dict(ema_decay=0.01, damping=1e-7)
     optim2_kwargs = dict(dataset_size=len(train_loader.dataset),
-                         curv_type='Cov', curv_shapes={'Linear': 'Diag'}, curv_kwargs=curv_kwargs,
+                         lr=1e-3, curv_type='Cov', curv_shapes={'Linear': 'Diag'}, curv_kwargs=curv_kwargs,
                          kl_weighting=1, warmup_kl_weighting_init=0.01, warmup_kl_weighting_steps=1000,
                          grad_ema_decay=0.1, num_mc_samples=50, val_num_mc_samples=100)
     optimizer2 = torchsso.optim.VIOptimizer(model2, **optim2_kwargs)
