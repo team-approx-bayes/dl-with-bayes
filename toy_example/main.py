@@ -79,25 +79,11 @@ def main():
 
     model1 = MLP(**model_kwargs)
     model1 = model1.to(device)
-    optim1_kwargs = dict(lr=1e-3)
-    optimizer1 = torch.optim.Adam(model1.parameters(), **optim1_kwargs)
+    optimizer1 = torch.optim.Adam(model1.parameters())
 
     model2 = pickle.loads(pickle.dumps(model1))  # create a clone
     model2 = model2.to(device)
-    curv_kwargs = dict(ema_decay=0.01, damping=1e-7)
-    optim2_kwargs = dict(dataset_size=len(train_loader.dataset),
-                         lr=1e-3, curv_type='Cov', curv_shapes={'Linear': 'Diag'}, curv_kwargs=curv_kwargs,
-                         kl_weighting=1, warmup_kl_weighting_init=0.01, warmup_kl_weighting_steps=1000,
-                         grad_ema_decay=0.1, num_mc_samples=50, val_num_mc_samples=100)
-    optimizer2 = torchsso.optim.VIOptimizer(model2, **optim2_kwargs)
-
-    def get_default_args(func):
-        signature = inspect.signature(func)
-        return {
-            k: v.default
-            for k, v in signature.parameters.items()
-            if v.default is not inspect.Parameter.empty
-        }
+    optimizer2 = torchsso.optim.VOGN(model2, dataset_size=len(train_loader.dataset))
 
     # Show all config
     print('===========================')
@@ -109,14 +95,7 @@ def main():
         print(f'{key}: {val}')
     print('---------------------------')
     print(f'optim1 class: {optimizer1.__class__}')
-    kwargs = get_default_args(optimizer1.__init__)
-    kwargs.update(optim1_kwargs)
-    print(f'optim1 args: {kwargs}')
-    print('---------------------------')
     print(f'optim2 class: {optimizer2.__class__}')
-    kwargs = get_default_args(optimizer2.__init__)
-    kwargs.update(optim2_kwargs)
-    print(f'optim2 args: {kwargs}')
     print('===========================')
 
     figpaths = []
