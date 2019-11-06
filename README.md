@@ -17,7 +17,8 @@ of PyTorch-SSO for CUDA/MPI support.
 
 
 ## Uncertainty estimation by NGVI
-Decision boundary and entropy plots on 2D-binary classification by MLPs trained with Adam and VOGN.
+Decision boundary and entropy plots on 2D-binary classification by MLPs trained 
+with Adam and [Variational Online Gauss-Newton (VOGN)](http://proceedings.mlr.press/v80/khan18a.html), a NGVI method with Gauss-Newton approximation of the Hessian.
 ![](./docs/boundary.gif)
 VOGN optimizes the posterior distribution of each weight (i.e., mean and variance of the Gaussian). 
 A model with the mean weights draws the red boundary, and models with the MC samples from the posterior distribution draw light red boundaries.
@@ -31,9 +32,14 @@ $ python main.py
 
 ## NGVI for computer vision
 This repository contains code for the NeurIPS 2019 paper "[Practical Deep Learning with Bayesian Principles](https://arxiv.org/abs/1906.02506),"
-which includes large-scale results of **VI (VOGN) on ImageNet classification**.
+which includes large-scale results of **NGVI (VOGN) on ImageNet classification**.
 
 ![](./docs/curves.png)
+VOGN achieves similar performance in about the same number of epochs as Adam and SGD.
+Importantly, the benefits of Bayesian principles are preserved: predictive probabilities are well-calibrated (rightmost figure), 
+uncertainties on out-of-distribution data are improved (refer the paper),
+and continual-learning performance is boosted (refer the paper, an example is to be prepared).  
+
 
 - Image classification ([MNIST](./classification),
  [CIFAR-10/100](./classification), 
