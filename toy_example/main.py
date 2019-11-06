@@ -102,6 +102,8 @@ def main():
     # Show all config
     print('===========================')
     print(f'model class: {model1.__class__}')
+    for m in model1.children():
+        print(m)
     print(f'model args: {model_kwargs}')
     for key, val in vars(args).items():
         print(f'{key}: {val}')
