@@ -1,12 +1,11 @@
 # Toy Example
 Training MLP on 2D-binary classification.
 ```bash
-$ cd toy_example
 $ python main.py
 ```
 This script creates following GIF.
 
-Decision boundaries on 2D-binary classification by MLPs trained with Adam and VOGN.
+Decision boundary and entropy plots on 2D-binary classification by MLPs trained with Adam and VOGN.
 ![](../docs/boundary.gif)
 
 VOGN optimizes the posterior distribution of each weight (i.e., mean and variance of the Gaussian). 
