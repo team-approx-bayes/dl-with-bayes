@@ -33,12 +33,36 @@ VOGN optimizes the posterior distribution of each weight (i.e., mean and varianc
 A model with the mean weights draws the red boundary, and models with the MC samples from the posterior distribution draw light red boundaries.
 VOGN converges to a similar solution as Adam while keeping uncertainty in its predictions.
 
+With PyTorch-SSO (`torchsso`), you can run VOGN training by changing a line in your train script:
+```python
+import torch
+import torchsso
+
+train_loader = torch.utils.data.DataLoader(train_dataset) 
+model = MLP()
+
+#optimizer = torch.optim.Adam(model.parameters())
+optimizer = torchsso.optim.VOGN(model, dataset_size=len(train_loader.dataset))
+
+for data, target in train_loader:
+
+    def closure():
+        optimizer.zero_grad()
+        output = model(data)
+        loss = F.binary_cross_entropy_with_logits(output, target)
+        loss.backward()
+        return loss, output
+
+    loss, output = optimizer.step(closure)
+
+```
 
 To train MLPs by VOGN and Adam and create GIF
 ```bash
 $ cd toy_example
 $ python main.py
 ```
+For detail, please see [VOGN implementation in PyTorch-SSO](https://github.com/cybertronai/pytorch-sso/blob/master/torchsso/optim/vi.py).
 
 ## Bayes for Image Classification
 This repository contains code for the NeurIPS 2019 paper "[Practical Deep Learning with Bayesian Principles](https://arxiv.org/abs/1906.02506),"
@@ -47,8 +71,8 @@ which includes large-scale results of **Large-scale Variational Inference on Ima
 ![](./docs/curves.png)
 VOGN achieves similar performance in about the same number of epochs as Adam and SGD.
 Importantly, the benefits of Bayesian principles are preserved: predictive probabilities are well-calibrated (rightmost figure), 
-uncertainties on out-of-distribution data are improved (refer the paper),
-and continual-learning performance is boosted (refer the paper, an example is to be prepared).  
+uncertainties on out-of-distribution data are improved (please refer the paper),
+and continual-learning performance is boosted (please refer the paper, an example is to be prepared).  
 
 
 ## Citation
