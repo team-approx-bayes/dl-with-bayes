@@ -66,13 +66,15 @@ For detail, please see [VOGN implementation in PyTorch-SSO](https://github.com/c
 
 ## Bayes for Image Classification
 This repository contains code for the NeurIPS 2019 paper "[Practical Deep Learning with Bayesian Principles](https://arxiv.org/abs/1906.02506),"
-which includes large-scale results of **Large-scale Variational Inference on ImageNet classification**.
+which includes the results of **Large-scale Variational Inference on ImageNet classification**.
 
 ![](./docs/curves.png)
 VOGN achieves similar performance in about the same number of epochs as Adam and SGD.
 Importantly, the benefits of Bayesian principles are preserved: predictive probabilities are well-calibrated (rightmost figure), 
 uncertainties on out-of-distribution data are improved (please refer the paper),
 and continual-learning performance is boosted (please refer the paper, an example is to be prepared).  
+
+See [classification](./classification) (single CPU/GPU) or [distributed/classification](./distributed/classification) (multiple GPUs) for example scripts.
 
 
 ## Citation
