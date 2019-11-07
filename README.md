@@ -34,15 +34,15 @@ A model with the mean weights draws the red boundary, and models with the MC sam
 VOGN converges to a similar solution as Adam while keeping uncertainty in its predictions.
 
 With PyTorch-SSO (`torchsso`), you can run VOGN training by changing a line in your train script:
-```python
+```diff
 import torch
-import torchsso
++import torchsso
 
 train_loader = torch.utils.data.DataLoader(train_dataset) 
 model = MLP()
 
-#optimizer = torch.optim.Adam(model.parameters())
-optimizer = torchsso.optim.VOGN(model, dataset_size=len(train_loader.dataset))
+-optimizer = torch.optim.Adam(model.parameters())
++optimizer = torchsso.optim.VOGN(model, dataset_size=len(train_loader.dataset))
 
 for data, target in train_loader:
 
