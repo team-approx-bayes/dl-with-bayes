@@ -66,6 +66,7 @@ For detail, please see [VOGN implementation in PyTorch-SSO](https://github.com/c
 
 ## Bayes for Image Classification
 This repository contains code for the NeurIPS 2019 paper "[Practical Deep Learning with Bayesian Principles](https://arxiv.org/abs/1906.02506),"
+[[poster](./neurips2019_poster.pdf)]
 which includes the results of **Large-scale Variational Inference on ImageNet classification**.
 
 ![](./docs/curves.png)
