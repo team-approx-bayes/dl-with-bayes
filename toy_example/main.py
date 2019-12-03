@@ -27,11 +27,11 @@ def main():
     parser.add_argument('--random_state', type=int, default=5,
                         help='random seed for data creation')
     # Training
-    parser.add_argument('--epochs', type=int, default=30,
+    parser.add_argument('--epochs', type=int, default=50,
                         help='number of epochs to train')
     parser.add_argument('--batch_size', type=int, default=10,
                         help='input batch size for training')
-    parser.add_argument('--plot_interval', type=int, default=30,
+    parser.add_argument('--plot_interval', type=int, default=50,
                         help='interval iterations to plot decision boundary')
     # Options
     parser.add_argument('--n_samples_for_mcplot', type=int, default=20,
@@ -194,6 +194,9 @@ def main():
                 ax1.grid(linestyle='--')
                 ax2.grid(linestyle='--')
                 ax3.grid(linestyle='--')
+                ax1.set_yticks([-5, 0, 5, 10])
+                ax2.set_yticks([-5, 0, 5, 10])
+                ax3.set_yticks([-5, 0, 5, 10])
                 ax1.legend(loc='lower right')
                 ax1.set_aspect(0.8)
                 plt.tight_layout()
